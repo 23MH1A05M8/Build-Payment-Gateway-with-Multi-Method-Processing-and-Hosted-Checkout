@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 import { useEffect, useMemo, useState } from "react";
 
 const API_BASE = "http://localhost:8000/api/v1";
+=======
+import { useState } from "react";
+>>>>>>> 36ec6368d78e97828bcc779a54d4a8587fd2a9b5
 
 export default function Checkout() {
   const params = new URLSearchParams(window.location.search);
@@ -12,6 +16,7 @@ export default function Checkout() {
     number: "",
     exp_month: "",
     exp_year: "",
+<<<<<<< HEAD
     cvv: ""
   });
 
@@ -25,10 +30,16 @@ export default function Checkout() {
     "X-Api-Key": localStorage.getItem("apiKey") || "key_test_abc123",
     "X-Api-Secret": localStorage.getItem("apiSecret") || "secret_test_xyz789"
   }), []);
+=======
+    cvv: "",
+  });
+  const [status, setStatus] = useState("");
+>>>>>>> 36ec6368d78e97828bcc779a54d4a8587fd2a9b5
 
   const pay = async () => {
     if (!orderId) return alert("Order ID missing");
 
+<<<<<<< HEAD
     let payload = { order_id: orderId, method };
 
     if (method === "upi") {
@@ -125,11 +136,75 @@ export default function Checkout() {
           placeholder="test@upi"
           value={vpa}
           onChange={e => setVpa(e.target.value)}
+=======
+    setStatus("processing");
+
+    const payload =
+      method === "upi"
+        ? { order_id: orderId, method, vpa }
+        : { order_id: orderId, method, card };
+
+    const res = await fetch("http://localhost:8000/api/v1/payments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": "key_test_abc123",
+        "X-Api-Secret": "secret_test_xyz789",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const payment = await res.json();
+    poll(payment.id);
+  };
+
+  const poll = (paymentId) => {
+    const i = setInterval(async () => {
+      const r = await fetch(
+        `http://localhost:8000/api/v1/payments/${paymentId}`,
+        {
+          headers: {
+            "X-Api-Key": "key_test_abc123",
+            "X-Api-Secret": "secret_test_xyz789",
+          },
+        }
+      );
+      const d = await r.json();
+
+      if (d.status === "success") {
+        clearInterval(i);
+        window.location.href = "/success";
+      }
+
+      if (d.status === "failed") {
+        clearInterval(i);
+        window.location.href = "/failure";
+      }
+    }, 1000);
+  };
+
+  return (
+    <div>
+      <h2>Checkout</h2>
+      <p>Order ID: {orderId}</p>
+
+      <select value={method} onChange={(e) => setMethod(e.target.value)}>
+        <option value="upi">UPI</option>
+        <option value="card">Card</option>
+      </select>
+
+      {method === "upi" && (
+        <input
+          placeholder="UPI ID"
+          value={vpa}
+          onChange={(e) => setVpa(e.target.value)}
+>>>>>>> 36ec6368d78e97828bcc779a54d4a8587fd2a9b5
         />
       )}
 
       {method === "card" && (
         <>
+<<<<<<< HEAD
           <input
             placeholder="4111111111111111"
             onChange={e => setCard({ ...card, number: e.target.value })}
@@ -146,10 +221,17 @@ export default function Checkout() {
             placeholder="CVV"
             onChange={e => setCard({ ...card, cvv: e.target.value })}
           />
+=======
+          <input placeholder="Card Number" onChange={(e)=>setCard({...card,number:e.target.value})}/>
+          <input placeholder="MM" onChange={(e)=>setCard({...card,exp_month:e.target.value})}/>
+          <input placeholder="YYYY" onChange={(e)=>setCard({...card,exp_year:e.target.value})}/>
+          <input placeholder="CVV" onChange={(e)=>setCard({...card,cvv:e.target.value})}/>
+>>>>>>> 36ec6368d78e97828bcc779a54d4a8587fd2a9b5
         </>
       )}
 
       <br /><br />
+<<<<<<< HEAD
       <button disabled={status === "processing"} onClick={pay}>
         {status === "processing" ? "Processing..." : "Pay"}
       </button>
@@ -158,6 +240,10 @@ export default function Checkout() {
       {status === "processing" && <p>⏳ Processing payment...</p>}
       {status === "success" && <p style={{ color: "green" }}>✅ Payment Successful</p>}
       {status === "failed" && <p style={{ color: "red" }}>❌ Payment Failed ({error})</p>}
+=======
+      <button onClick={pay}>Pay</button>
+      <p>{status}</p>
+>>>>>>> 36ec6368d78e97828bcc779a54d4a8587fd2a9b5
     </div>
   );
 }

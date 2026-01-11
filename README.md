@@ -150,6 +150,7 @@ Open browser:
 http://localhost:3001/?order_id=order_xxxxx
 ```
 
+<<<<<<< HEAD
 ### UPI Payment Test
 
 #### Steps
@@ -185,6 +186,23 @@ http://localhost:3001/?order_id=order_xxxxx
 > ✔ Card payments resolve slightly slower than UPI (intentional test behavior)
 
 
+=======
+Steps:
+1. Enter UPI ID:
+   ```
+   test@upi
+   ```
+2. Click **Pay**
+
+Expected behavior:
+- Status shows `processing`
+- Within 1–2 seconds → `success`
+
+⚠️ If it stays on `processing`, refresh once (acceptable in test mode).
+
+---
+
+>>>>>>> 36ec6368d78e97828bcc779a54d4a8587fd2a9b5
 ## 📊 Verify Payments (API)
 
 ```bash
@@ -211,7 +229,11 @@ Example output:
 Open browser:
 
 ```
+<<<<<<< HEAD
 http://localhost:3000
+=======
+http://localhost:3002
+>>>>>>> 36ec6368d78e97828bcc779a54d4a8587fd2a9b5
 ```
 
 ### Login Credentials (Auto-Created Test Merchant)
